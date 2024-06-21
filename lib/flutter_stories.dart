@@ -47,6 +47,8 @@ class Story extends StatefulWidget {
     required this.momentBuilder,
     required this.momentDurationGetter,
     required this.momentCount,
+    this.onNext,
+    this.onPrevious,
     this.onFlashForward,
     this.onFlashBack,
     this.progressSegmentBuilder = Story.instagramProgressSegmentBuilder,
@@ -79,6 +81,20 @@ class Story extends StatefulWidget {
   /// Sets the number of moments in story
   ///
   final int momentCount;
+
+  ///
+  /// Fires the callback when user taps on left side of the screen
+  /// to play the previous story
+  ///
+
+  final VoidCallback? onPrevious;
+
+  ///
+  /// Fires the callback when user taps on right side of the screen
+  /// to play the next story
+  ///
+
+  final VoidCallback? onNext;
 
   ///
   /// Gets executed when user taps the right portion of the screen
@@ -191,8 +207,14 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
     final width = MediaQuery.of(context).size.width;
     if (details.localPosition.dx < width * widget.momentSwitcherFraction) {
       _switchToPrevOrFinish();
+      if (widget.onPrevious != null) {
+        widget.onPrevious!();
+      }
     } else {
       _switchToNextOrFinish();
+      if (widget.onNext != null) {
+        widget.onNext!();
+      }
     }
   }
 
